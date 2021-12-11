@@ -108,7 +108,7 @@ extern "C" {
     pub fn luaL_checkudata(L: *mut lua_State, ud: c_int, tname: *const c_char) -> *mut c_void;
 
     pub fn luaL_where(L: *mut lua_State, lvl: c_int);
-    pub fn luaL_error(L: *mut lua_State, fmt: *const c_char, ...) -> !;
+    pub fn luaL_error(L: *mut lua_State, fmt: *const c_char, ...) -> c_int;
 
     // TODO: test this
     pub fn luaL_checkoption(

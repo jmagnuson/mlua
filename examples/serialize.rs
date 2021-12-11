@@ -1,19 +1,19 @@
 use mlua::{Error, Lua, LuaSerdeExt, Result, UserData, Value};
-use serde::{Deserialize, Serialize};
+//use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 enum Transmission {
     Manual,
     Automatic,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 struct Engine {
     v: u32,
     kw: u32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 struct Car {
     active: bool,
     model: String,

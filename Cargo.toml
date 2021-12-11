@@ -48,26 +48,33 @@ num-traits = { version = "0.2.14" }
 futures-core = { version = "0.3.5", optional = true }
 futures-task = { version = "0.3.5", optional = true }
 futures-util = { version = "0.3.5", optional = true }
-serde = { version = "1.0", optional = true }
+serde = { version = "1.0", optional = true, features = ["derive"] }
 erased-serde = { version = "0.3", optional = true }
 
 [build-dependencies]
 cc = { version = "1.0" }
 pkg-config = { version = "0.3.17" }
-lua-src = { version = ">= 540.0.0, < 550.0.0", optional = true }
+#lua-src = { version = ">= 540.0.0, < 550.0.0", optional = true }
 luajit-src = { version = ">= 210.1.2, < 220.0.0", optional = true }
 
+[build-dependencies.lua-src]
+#git = "https://github.com/jmagnuson/lua-src-rs"
+#branch = "wasm-pack-support"
+path = "../lua-src-rs"
+#version = ">= 540.0.0, < 550.0.0"
+optional = true
+
 [dev-dependencies]
-rustyline = "8.0"
-criterion = { version = "0.3.4", features = ["html_reports", "async_tokio"] }
-trybuild = "1.0"
-futures = "0.3.5"
-hyper = { version = "0.14", features = ["client", "server"] }
-reqwest = { version = "0.11", features = ["json"] }
-tokio = { version = "1.0", features = ["full"] }
-futures-timer = "3.0"
+#rustyline = "8.0"
+#criterion = { version = "0.3.4", features = ["html_reports", "async_tokio"] }
+#trybuild = "1.0"
+#futures = "0.3.5"
+#hyper = { version = "0.14", features = ["client", "server"] }
+#reqwest = { version = "0.11", features = ["json"] }
+#tokio = { version = "1.0", features = ["full"] }
+#futures-timer = "3.0"
 serde_json = "1.0"
-maplit = "1.0"
+#maplit = "1.0"
 
 [[bench]]
 name = "benchmark"
@@ -101,3 +108,6 @@ required-features = ["serialize"]
 [[example]]
 name = "userdata"
 required-features = ["macros"]
+
+#[lib]
+#crate-type = ["cdylib", "rlib"]

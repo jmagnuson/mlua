@@ -529,7 +529,7 @@ where
     match catch_unwind(AssertUnwindSafe(|| f(nargs))) {
         Ok(Ok(r)) => {
             ffi::lua_remove(state, 1);
-            r
+            return r;
         }
         Ok(Err(err)) => {
             ffi::lua_settop(state, 1);
@@ -553,16 +553,17 @@ where
                 *err = Error::CallbackError { traceback, cause };
             }
 
-            ffi::lua_error(state)
+            ffi::lua_error(state);
         }
         Err(p) => {
             ffi::lua_settop(state, 1);
             ptr::write(ud as *mut WrappedFailure, WrappedFailure::Panic(Some(p)));
             get_gc_metatable::<WrappedFailure>(state);
             ffi::lua_setmetatable(state, -2);
-            ffi::lua_error(state)
+            ffi::lua_error(state);
         }
     }
+    unreachable!();
 }
 
 pub unsafe extern "C" fn error_traceback(state: *mut ffi::lua_State) -> c_int {

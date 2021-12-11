@@ -646,16 +646,17 @@ impl Lua {
         match entrypoint_inner(mem::transmute(&self), func) {
             Ok(res) => {
                 self.push_value(res)?;
-                Ok(1)
+                return Ok(1);
             }
             Err(err) => {
                 self.push_value(Value::Error(err))?;
                 let state = self.state;
                 // Lua (self) must be dropped before triggering longjmp
                 drop(self);
-                ffi::lua_error(state)
+                ffi::lua_error(state);
             }
         }
+        unreachable!();
     }
 
     // A simple module entrypoint without arguments
@@ -2521,7 +2522,7 @@ where
                     extra.ref_free.push(index);
                 }
             }
-            r
+            return r;
         }
         Ok(Err(err)) => {
             let wrapped_error = get_wrapped_failure();
@@ -2543,16 +2544,17 @@ where
                 *err = Error::CallbackError { traceback, cause };
             }
 
-            ffi::lua_error(state)
+            ffi::lua_error(state);
         }
         Err(p) => {
             let wrapped_panic = get_wrapped_failure();
             ptr::write(wrapped_panic, WrappedFailure::Panic(Some(p)));
             get_gc_metatable::<WrappedFailure>(state);
             ffi::lua_setmetatable(state, -2);
-            ffi::lua_error(state)
+            ffi::lua_error(state);
         }
     }
+    unreachable!();
 }
 
 // Uses 3 stack spaces

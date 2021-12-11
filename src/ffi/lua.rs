@@ -603,7 +603,7 @@ extern "C" {
 
 // miscellaneous functions
 extern "C" {
-    pub fn lua_error(L: *mut lua_State) -> !;
+    pub fn lua_error(L: *mut lua_State) -> c_int;
     pub fn lua_next(L: *mut lua_State, idx: c_int) -> c_int;
     pub fn lua_concat(L: *mut lua_State, n: c_int);
     #[cfg(any(feature = "lua54", feature = "lua53", feature = "lua52"))]
