@@ -68,11 +68,14 @@ impl CommandExt for Command {
     }
 }
 
-fn build_glue<P: AsRef<Path> + std::fmt::Debug>(include_path: &P) {
+// `include_path` is optional as Lua headers can be also found in compiler standard paths
+fn build_glue(include_path: Option<impl AsRef<Path>>) {
     let build_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
     let mut config = cc::Build::new();
-    config.include(include_path);
+    if let Some(include_path) = include_path {
+        config.include(include_path.as_ref());
+    }
 
     // Compile and run glue.c
     let glue = build_dir.join("glue");
@@ -245,9 +248,10 @@ fn main() {
 
     let include_dir = find::probe_lua();
     if env::var("TARGET").unwrap() != env::var("HOST").unwrap() {
+        // The `probe_lua` call above is still needed here
         generate_glue().unwrap();
     } else {
-        build_glue(&include_dir);
+        build_glue(include_dir);
         println!("cargo:rerun-if-changed=src/ffi/glue/glue.c");
     }
 
